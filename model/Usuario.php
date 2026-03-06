@@ -272,12 +272,38 @@ class Usuario
         $stmt->execute([':id' => $id]); 
 
         if ($stmt->rowCount() === 0) {
-            throw new Exception("ID não encontrado para exclusão.");
+
             return false;
         }
             
         return true;
     }
+
+    public function atualizar()
+    {
+        $pdo = self::getConexao();
+
+        $sql = "UPDATE `usuarios` SET `nome` = :nome, `email` = :email, `senha` = :senhaHash, `id_perfil` = :idPerfil, `ativo` = :ativo WHERE `id_usuario` = :id";
+
+        $stmt = $pdo->prepare($sql);
+
+        $stmt->execute([
+            ':nome' => $this->nome,
+            ':email' => $this->email,
+            ':senhaHash' => $this->senhaHash,
+            ':idPerfil' => $this->idPerfil,
+            ':ativo' => $this->ativo,
+            ':id' => $this->id
+        ]);
+
+        if ($stmt->rowCount() === 0) {
+            return false;
+        }
+            
+        return true;
+    }
+
+    
 
 
 
@@ -293,7 +319,19 @@ class Usuario
 // );
 
 
-Usuario::excluir(14);
+$usuario2 = new Usuario(
+    id: 1,
+    nome: "João Silva",
+    email: "joao@example.com",
+    idPerfil: "1",
+    senhaHash: "123",
+    ativo: true
+);
+
+
+    $usuario2->atualizar();
+
+// Usuario::excluir(14);
 
 // echo "<pre>";
 
